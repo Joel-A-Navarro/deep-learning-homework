@@ -1,126 +1,104 @@
-# Big Data Homework - "Alexa, can you handle big data?"
-
-### Before You Begin
-
-1. Create a new repository for this project called `big-data-challenge`. **Do not add this homework to an existing repository**.
-
-2. Clone the new repository to your computer.
-
-3. Inside your local git repository, create a directory for the level of challenge Challenge you choose. Use folder names corresponding to the challenges: **level-1** or  **level-2**.
-
-4. Download a Google Colab Notebook as a `ipynb` file and add it to this folder. This will be the main script to run for analysis. Be sure to also add any SQL queries you used to a `.sql` file and add it to your repo.
-
-5. Push the above changes to GitHub or GitLab.
-
+# Deep Learning Homework: Charity Funding Predictor
 
 ## Background
 
-In this assignment you will put your ETL skills to the test. Many of Amazon's shoppers depend on product reviews to make a purchase. Amazon makes these datasets publicly available. However, they are quite large and can exceed the capacity of local machines to handle. One dataset alone contains over 1.5 million rows; with over 40 datasets, this can be quite taxing on the average local computer. Your first goal for this assignment will be to perform the ETL process completely in the cloud and upload a DataFrame to an RDS instance. The second goal will be to use PySpark or SQL to perform a statistical analysis of selected data.
+The non-profit foundation Alphabet Soup wants to create an algorithm to predict whether or not applicants for funding will be successful. With your knowledge of machine learning and neural networks, you’ll use the features in the provided dataset to create a binary classifier that is capable of predicting whether applicants will be successful if funded by Alphabet Soup.
 
-There are two levels to this homework assignment. The second level is optional but highly recommended.
+From Alphabet Soup’s business team, you have received a CSV containing more than 34,000 organizations that have received funding from Alphabet Soup over the years. Within this dataset are a number of columns that capture metadata about each organization, such as the following:
 
-1. Create DataFrames to match production-ready tables from two big Amazon customer review datasets.
-2. Analyze whether reviews from Amazon's Vine program are trustworthy.
-
-- - -
+* **EIN** and **NAME**—Identification columns
+* **APPLICATION_TYPE**—Alphabet Soup application type
+* **AFFILIATION**—Affiliated sector of industry
+* **CLASSIFICATION**—Government organization classification
+* **USE_CASE**—Use case for funding
+* **ORGANIZATION**—Organization type
+* **STATUS**—Active status
+* **INCOME_AMT**—Income classification
+* **SPECIAL_CONSIDERATIONS**—Special consideration for application
+* **ASK_AMT**—Funding amount requested
+* **IS_SUCCESSFUL**—Was the money used effectively
 
 ## Instructions
 
-### Level 1
+### Step 1: Preprocess the data
 
-* Use the furnished schema to create tables in your RDS database.
+Using your knowledge of Pandas and the Scikit-Learn’s `StandardScaler()`, you’ll need to preprocess the dataset in order to compile, train, and evaluate the neural network model later in Step 2
 
-* Create two separate Google Colab notebooks and **extract** any two datasets from the list at [review dataset](https://s3.amazonaws.com/amazon-reviews-pds/tsv/index.txt), one into each notebook.
+Using the information we have provided in the starter code, follow the instructions to complete the preprocessing steps.
 
-  **Note:** It is possible to ETL both data sources in a single notebook, but due to the large data sizes, it will be easier to work with these S3 data sources in two separate Colab notebooks.
+1. Read in the charity_data.csv to a Pandas DataFrame, and be sure to identify the following in your dataset:
+  * What variable(s) are considered the target(s) for your model?
+  * What variable(s) are considered the feature(s) for your model?
+2. Drop the `EIN` and `NAME` columns.
+3. Determine the number of unique values for each column.
+4. For those columns that have more than 10 unique values, determine the number of data points for each unique value.
+6. Use the number of data points for each unique value to pick a cutoff point to bin "rare" categorical variables together in a new value, `Other`, and then check if the binning was successful.
+7. Use `pd.get_dummies()` to encode categorical variables
 
-* Be sure to handle the header correctly. If you read the file without the header parameter, you may find that the column headers are included in the table rows.
+### Step 2: Compile, Train, and Evaluate the Model
 
-* For each notebook (one dataset per notebook), complete the following:
+Using your knowledge of TensorFlow, you’ll design a neural network, or deep learning model, to create a binary classification model that can predict if an Alphabet Soup–funded organization will be successful based on the features in the dataset. You’ll need to think about how many inputs there are before determining the number of neurons and layers in your model. Once you’ve completed that step, you’ll compile, train, and evaluate your binary classification model to calculate the model’s loss and accuracy.
 
-  * Count the number of records (rows) in the dataset.
+1. Continue using the jupter notebook where you’ve already performed the preprocessing steps from Step 1.
+2. Create a neural network model by assigning the number of input features and nodes for each layer using Tensorflow Keras.
+3. Create the first hidden layer and choose an appropriate activation function.
+4. If necessary, add a second hidden layer with an appropriate activation function.
+5. Create an output layer with an appropriate activation function.
+6. Check the structure of the model.
+7. Compile and train the model.
+8. Create a callback that saves the model's weights every 5 epochs.
+9. Evaluate the model using the test data to determine the loss and accuracy.
+10. Save and export your results to an HDF5 file, and name it `AlphabetSoupCharity.h5`.
 
-  * **Transform** the dataset to fit the tables in the [schema file](../Resources/schema.sql). Be sure the DataFrames match in data type and in column name.
+### Step 3: Optimize the Model
 
-  * **Load** the DataFrames that correspond to tables into an RDS instance. **Note:** This process can take up to 10 minutes for each. Be sure that everything is correct before uploading.
+Using your knowledge of TensorFlow, optimize your model in order to achieve a target predictive accuracy higher than 75%. If you can't achieve an accuracy higher than 75%, you'll need to make at least three attempts to do so.
 
-### Level 2
+Optimize your model in order to achieve a target predictive accuracy higher than 75% by using any or all of the following:
 
-In Amazon's Vine program, reviewers receive free products in exchange for reviews.
+* Adjusting the input data to ensure that there are no variables or outliers that are causing confusion in the model, such as:
+  * Dropping more or fewer columns.
+  * Creating more bins for rare occurrences in columns.
+  * Increasing or decreasing the number of values for each bin.
+* Adding more neurons to a hidden layer.
+* Adding more hidden layers.
+* Using different activation functions for the hidden layers.
+* Adding or reducing the number of epochs to the training regimen.
 
-  ![vine01.png](../Images/vine01.png)
+**NOTE**: You will not lose points if your model does not achieve target performance, as long as you make three attempts at optimizing the model in your jupyter notebook.
 
-Amazon has several policies to reduce the bias of its Vine reviews: [https://www.amazon.com/gp/vine/help?ie=UTF8](https://www.amazon.com/gp/vine/help?ie=UTF8).
+1. Create a new Jupyter Notebook file and name it `AlphabetSoupCharity_Optimzation.ipynb`.
+2. Import your dependencies, and read in the `charity_data.csv` to a Pandas DataFrame.
+3. Preprocess the dataset like you did in Step 1, taking into account any modifications to optimize the model.
+4. Design a neural network model, taking into account any modifications that will optimize the model to achieve higher than 75% accuracy.
+5. Save and export your results to an HDF5 file, and name it `AlphabetSoupCharity_Optimization.h5`.
 
-But are Vine reviews truly trustworthy? Your task is to investigate whether Vine reviews are free of bias. Use either PySpark or—for an extra challenge—SQL to analyze the data.
+### Step 4: Write a Report on the Neural Network Model
 
-* If you choose to use SQL, first use Spark on Colab to extract and transform the data and load it into a SQL table on your RDS account. Perform your analysis with SQL queries on RDS.
+For this part of the Challenge, you’ll write a report on the performance of the deep learning model you created for AlphabetSoup.
 
-* While there are no hard requirements for the analysis, consider steps you can take to reduce noisy data, e.g., filtering for reviews that meet a certain number of helpful votes, total votes, or both.
+The report should contain the following:
 
-* Submit a summary of your findings and analysis.
+1. **Overview** of the analysis: Explain the purpose of this analysis.
+
+2. **Results**: Using bulleted lists and images to support your answers, address the following questions.
+
+  * Data Preprocessing
+    * What variable(s) are considered the target(s) for your model?
+    * What variable(s) are considered to be the features for your model?
+    * What variable(s) are neither targets nor features, and should be removed from the input data?
+  * Compiling, Training, and Evaluating the Model
+    * How many neurons, layers, and activation functions did you select for your neural network model, and why?
+    * Were you able to achieve the target model performance?
+    * What steps did you take to try and increase model performance?
+
+3. **Summary**: Summarize the overall results of the deep learning model. Include a recommendation for how a different model could solve this classification problem, and explain your recommendation.
 
 - - -
-
-## Hints and Considerations
-
-* Be sure that to start each notebook with following code in the first cell and update the Spark version.
-
-```python
-import os
-# Find the latest version of spark 3.0  from http://www-us.apache.org/dist/spark/ and enter as the spark version
-# For example:
-# spark_version = 'spark-3.0.1'
-spark_version = 'spark-3.<spark version>'
-os.environ['SPARK_VERSION']=spark_version
-
-# Install Spark and Java
-!apt-get update
-!apt-get install openjdk-11-jdk-headless -qq > /dev/null
-!wget -q http://www-us.apache.org/dist/spark/$SPARK_VERSION/$SPARK_VERSION-bin-hadoop2.7.tgz
-!tar xf $SPARK_VERSION-bin-hadoop2.7.tgz
-!pip install -q findspark
-
-# Set Environment Variables
-import os
-os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-11-openjdk-amd64"
-os.environ["SPARK_HOME"] = f"/content/{spark_version}-bin-hadoop2.7"
-
-# Start a SparkSession
-import findspark
-findspark.init()
-```
-
-* For connection to Postgres run the following code in the next cell.
-
-```python
-!wget https://jdbc.postgresql.org/download/postgresql-42.2.9.jar
-```
-
-- - -
-
-## Submission
-
-* **Important** be sure to clean up all your AWS resources. Consult the [AWS cleanup guide](../Resources/AWS_cleanup.pdf) and [AWS check billing guide](../Resources/AWS_check_billing.pdf) as reference.
-
-* Download you Google Colab notebooks as `.ipynb` files and upload those to GitHub.
-
-* Copy your SQL queries into `.sql` files and upload to GitHub.
-
-* **Important:** Do not upload notebooks that contain your RDS password and endpoint. Be sure to delete them before making your notebook public!
-
-* Ensure your repository has regular commits and a thorough README.md file
 
 ## Rubric
 
-[Unit 22 Rubric - Big Data Homework - "Alexa, can you handle big data?"](https://docs.google.com/document/d/1H-TBgBUz1jVGG1zvo046GraApmbepVZgYionh-4mNas/edit?usp=sharing)
+[Unit 21 - Deep Learning Homework Rubric - Charity Funding Predictor](https://docs.google.com/document/d/1SLOROX0lqZwa1ms-iRbHMQr1QSsMT2k0boO9YpFBnHA/edit?usp=sharing)
 
-- - -
-
-## References
-
-Amazon customer Reviews Dataset. (n.d.). Retrieved April 08, 2021, from: [https://s3.amazonaws.com/amazon-reviews-pds/readme.html](https://s3.amazonaws.com/amazon-reviews-pds/readme.html)
-
-- - -
-
-© 2021 Trilogy Education Services, LLC, a 2U, Inc. brand. Confidential and Proprietary. All Rights Reserved.
+___
+© 2021  Trilogy Education Services, a 2U, Inc. brand. All Rights Reserved.	
